@@ -1,35 +1,30 @@
-import logo from './logo.svg';
+import imageRickMorty from './img/rick-morty.png';
+import {useState} from "react";
 import './App.css';
-import Welcome from './components/Welcome';
-import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
-import Contact from './pages/Contac';
-import Profile from './pages/Profile';
+import Characters from "./components/Characters";
 
 function App() {
+    const [characters, setCharacters] = useState(null);
+    const resApi = async () => {
+        const api = await fetch('https://rickandmortyapi.com/api/character');
+        const characterApi = await api.json();
+
+        setCharacters(characterApi.results);
+        //console.log(characterApi);
+    }
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-		{/*<Welcome name="Esperanzo" platillo="Le encanta el Atun"/>*/}
-          <Router>
-              <div>
-                  <ul>
-                      <li>
-                          <Link to="/">Home</Link>
-                      </li>
-                      <li>
-                          <Link to="/contact">Contacto</Link>
-                      </li>
-                      <li>
-                          <Link to="/profile">Profile</Link>
-                      </li>
-                  </ul>
-              </div>
-              <Routes>
-                  <Route path="/contact" element={<Contact/>}/>
-                  <Route path="/profile/:name" element={<Profile/>}/>
-              </Routes>
-          </Router>
+          <h1 className="title">Rick & Morty</h1>
+          {characters ? (
+              <Characters characters={characters} setCharacters={setCharacters}/>
+          ):(
+              <>
+                  <img src={imageRickMorty} className="img-home" alt="rick-morty" />
+                  <button onClick={resApi} className="btn-search">Buscar Personajes</button>
+              </>
+          )}
+
       </header>
     </div>
   );
